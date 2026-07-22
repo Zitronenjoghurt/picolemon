@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "picolemon_flutter",
+            "cwd": "${workspaceFolder}/picolemon_flutter",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "picolemon_server",
+            "cwd": "${workspaceFolder}/picolemon_server",
+            "request": "launch",
+            "type": "dart",
+            "preLaunchTask": "docker_compose_up",
+            "program": "bin/main.dart",
+            "env": {
+                "SERVERPOD_PASSWORD_database": "umYNTgLODG-XXqQJQnMdRZ5pVMc286bz"
+            },
+            "args": [
+                "--apply-migrations"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "picolemon (full stack)",
+            "configurations": [
+                "picolemon_server",
+                "picolemon_flutter"
+            ],
+            "presentation": {
+                "order": 1
+            }
+        }
+    ]
+}
