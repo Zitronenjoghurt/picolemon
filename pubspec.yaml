@@ -8,4 +8,5 @@ workspace:
   - picolemon_client
   - picolemon_server
   - picolemon_flutter
+  - picolemon_games
 
