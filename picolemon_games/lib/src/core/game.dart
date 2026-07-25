@@ -6,8 +6,8 @@ abstract interface class Game<S, M> {
   S initialState(int playerCount);
   bool isLegal(S state, int seat, M move);
   S apply(S state, int seat, M move);
-  GameStatus status (S state);
-  String? currentPlayer(S state);
+  GameStatus status(S state);
+  int? currentPlayer(S state);
 
   Map<String, dynamic> encodeState(S state);
   S decodeState(Map<String, dynamic> json);

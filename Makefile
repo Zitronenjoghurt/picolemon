@@ -1,5 +1,6 @@
 SERVER := picolemon_server
 APP    := picolemon_flutter
+GAMES  := picolemon_games
 DEVICE ?= R3CY8066JQM
 
 .DEFAULT_GOAL := help
@@ -60,17 +61,21 @@ run-all: reverse ## run on EVERY connected device; one hot reload updates all
 fmt: ## format everything
 	dart format .
 
-analyze: ## static analysis, both packages
+analyze: ## static analysis, all packages
 	cd $(SERVER) && dart analyze --fatal-infos
+	cd $(GAMES) && dart analyze --fatal-infos
 	cd $(APP) && flutter analyze
 
 test: ## run all tests
 	cd $(SERVER) && dart test
+	cd $(GAMES) && dart test
 	cd $(APP) && flutter test
 
 check: ## everything CI runs, plus the Flutter app (which CI currently skips)
 	cd $(SERVER) && dart format --output=none --set-exit-if-changed .
 	cd $(SERVER) && dart analyze --fatal-infos
+	cd $(GAMES) && dart format --output=none --set-exit-if-changed .
+	cd $(GAMES) && dart analyze --fatal-infos
 	cd $(APP) && dart format --output=none --set-exit-if-changed .
 	cd $(APP) && flutter analyze
 

@@ -20,6 +20,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Check formatting
+      - name: Check formatting (server)
         working-directory: picolemon_server
+        run: dart format --set-exit-if-changed .
+
+      - name: Check formatting (games)
+        working-directory: picolemon_games
         run: dart format --set-exit-if-changed .

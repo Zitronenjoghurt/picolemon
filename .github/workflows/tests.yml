@@ -2,12 +2,12 @@ name: Tests
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  test:
+  test-server:
     runs-on: ubuntu-latest
     env:
       VERSION: '3.4.11'
@@ -43,3 +43,20 @@ jobs:
         if: always()
         working-directory: picolemon_server
         run: docker compose down -v
+
+  test-games:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.8'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        working-directory: picolemon_games
+        run: dart test

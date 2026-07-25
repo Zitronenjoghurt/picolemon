@@ -20,6 +20,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze
+      - name: Analyze server
         working-directory: picolemon_server
+        run: dart analyze --fatal-infos
+
+      - name: Analyze games
+        working-directory: picolemon_games
         run: dart analyze --fatal-infos
