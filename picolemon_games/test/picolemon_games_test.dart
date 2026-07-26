@@ -139,18 +139,39 @@ void main() {
         (0, 1),
       ]);
       final decoded = game.decodeState(game.encodeState(board));
-      expect(decoded.width, board.width);
-      expect(decoded.height, board.height);
-      expect(decoded.winLength, board.winLength);
-      expect(decoded.seatCount, board.seatCount);
-      expect(decoded.cells, board.cells);
-      expect(decoded.history, board.history);
+      // Whole-object value equality (deep list comparison) — pre-freezed this
+      // needed six field-by-field expects; now it's one line.
+      expect(decoded, board);
     });
 
     test('move survives encode -> decode', () {
       final move = TicTacToeMove(index: 7);
       final decoded = game.decodeMove(game.encodeMove(move));
-      expect(decoded.index, move.index);
+      expect(decoded, move);
+    });
+  });
+
+  group('value equality', () {
+    test('moves are compared by value, and usable as Set keys', () {
+      expect(TicTacToeMove(index: 4), TicTacToeMove(index: 4));
+      expect(TicTacToeMove(index: 4), isNot(TicTacToeMove(index: 5)));
+      // consistent == and hashCode => dedupes in a Set (the hand-rolled trap)
+      expect({TicTacToeMove(index: 4), TicTacToeMove(index: 4)}, hasLength(1));
+    });
+
+    test('boards with identical contents are equal (deep list equality)', () {
+      final a = playMoves(game, game.initialState(2), [(0, 0), (1, 4)]);
+      final b = playMoves(game, game.initialState(2), [(0, 0), (1, 4)]);
+      expect(a, b); // different List instances, same contents => equal
+      final c = playMoves(game, game.initialState(2), [(0, 1), (1, 4)]);
+      expect(a, isNot(c)); // divergent history => unequal
+    });
+
+    test('game statuses compare by variant and payload', () {
+      expect(const Ongoing(), const Ongoing());
+      expect(const Ongoing(), isNot(const Draw()));
+      expect(Winner([0]), Winner([0])); // same seats => equal
+      expect(Winner([0]), isNot(Winner([1]))); // different seats => unequal
     });
   });
 

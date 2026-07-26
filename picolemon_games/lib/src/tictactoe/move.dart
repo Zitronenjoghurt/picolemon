@@ -1,10 +1,12 @@
-class TicTacToeMove {
-  final int index;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  TicTacToeMove({required this.index});
+part 'move.freezed.dart';
+part 'move.g.dart';
+
+@freezed
+abstract class TicTacToeMove with _$TicTacToeMove {
+  const factory TicTacToeMove({required int index}) = _TicTacToeMove;
 
   factory TicTacToeMove.fromJson(Map<String, dynamic> json) =>
-      TicTacToeMove(index: json['index'] as int);
-
-  Map<String, dynamic> toJson() => {'index': index};
+      _$TicTacToeMoveFromJson(json);
 }

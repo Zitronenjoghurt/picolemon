@@ -1,16 +1,12 @@
-sealed class GameStatus {
-  const GameStatus();
-}
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-final class Ongoing extends GameStatus {
-  const Ongoing();
-}
+part 'game_status.freezed.dart';
 
-final class Draw extends GameStatus {
-  const Draw();
-}
+@freezed
+sealed class GameStatus with _$GameStatus {
+  const factory GameStatus.ongoing() = Ongoing;
 
-final class Winner extends GameStatus {
-  final List<int> seats;
-  const Winner(this.seats);
+  const factory GameStatus.draw() = Draw;
+
+  const factory GameStatus.winner(List<int> seats) = Winner;
 }

@@ -36,8 +36,9 @@ server: ## run the Serverpod server
 apply: ## run the server, applying pending migrations
 	cd $(SERVER) && dart run bin/main.dart --apply-migrations
 
-gen: ## regenerate client + protocol — after ANY model or endpoint change
+gen: ## regenerate: Serverpod protocol + games freezed/json codegen — after ANY model change
 	cd $(SERVER) && serverpod generate
+	cd $(GAMES) && dart run build_runner build --delete-conflicting-outputs
 
 migrate: ## create a migration from model changes
 	cd $(SERVER) && serverpod create-migration
