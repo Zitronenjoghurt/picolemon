@@ -1,55 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:picolemon_flutter/providers/tictactoe_provider.dart';
 import 'package:picolemon_flutter/widgets/tictactoe_board_widget.dart';
 import 'package:picolemon_games/picolemon_games.dart';
 
-class TicTacToeTestScreen extends StatefulWidget {
+class TicTacToeTestScreen extends ConsumerWidget {
   const TicTacToeTestScreen({super.key});
 
-  @override
-  State<StatefulWidget> createState() => _TicTacToeTestScreenState();
-}
-
-class _TicTacToeTestScreenState extends State<TicTacToeTestScreen> {
-  final _game = const TicTacToeGame();
-  late TicTacToeBoard _board;
-
-  @override
-  void initState() {
-    super.initState();
-    _board = _game.initialState(2);
-  }
-
-  void _onTap(int index) {
-    final seat = _game.currentPlayer(_board);
-    if (seat == null) return;
-
-    final move = TicTacToeMove(index: index);
-    if (!_game.isLegal(_board, seat, move)) return;
-
-    setState(() {
-      _board = _game.apply(_board, seat, move);
-    });
-  }
-
-  void _newGame() {
-    setState(() {
-      _board = _game.initialState(2);
-    });
-  }
+  static const _game = TicTacToeGame();
 
   String _glyph(int seat) => seat == 0 ? 'X' : 'O';
 
-  String _statusText() {
-    return switch (_game.status(_board)) {
+  String _statusText(TicTacToeBoard board) {
+    return switch (_game.status(board)) {
       Winner(:final seats) => '${_glyph(seats.first)} wins!',
       Draw() => "It's a draw",
-      Ongoing() => "${_glyph(_game.currentPlayer(_board)!)}'s turn",
+      Ongoing() => "${_glyph(_game.currentPlayer(board)!)}'s turn",
     };
   }
 
   @override
-  Widget build(BuildContext context) {
-    final gameOver = _game.status(_board) is! Ongoing;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final board = ref.watch(ticTacToeProvider);
+    final gameOver = _game.status(board) is! Ongoing;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Tic-Tac-Toe')),
@@ -62,18 +35,19 @@ class _TicTacToeTestScreenState extends State<TicTacToeTestScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _statusText(),
+                  _statusText(board),
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 16),
                 TicTacToeBoardWidget(
-                  board: _board,
-                  onTap: _onTap,
+                  board: board,
+                  onTap: (index) =>
+                      ref.read(ticTacToeProvider.notifier).makeMove(index),
                   interactive: !gameOver,
                 ),
                 const SizedBox(height: 16),
                 FilledButton(
-                  onPressed: _newGame,
+                  onPressed: () => ref.read(ticTacToeProvider.notifier).reset(),
                   child: const Text('New game'),
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:picolemon_client/picolemon_client.dart';
 import 'package:picolemon_flutter/screens/sign_in_screen.dart';
 import 'package:picolemon_flutter/screens/tictactoe_test_screen.dart';
@@ -38,7 +39,7 @@ void main() async {
 
   client.auth.initialize();
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
