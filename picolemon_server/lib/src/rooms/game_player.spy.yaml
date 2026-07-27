@@ -1,0 +1,11 @@
+class: GamePlayer
+table: game_player
+fields:
+  room: GameRoom?, relation(onDelete=Cascade)
+  userId: UuidValue?
+  seat: int
+  joinedAt: DateTime
+indexes:
+  game_player_room_seat_idx:
+    fields: roomId, seat
+    unique: true

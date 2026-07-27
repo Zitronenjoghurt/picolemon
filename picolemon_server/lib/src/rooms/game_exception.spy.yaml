@@ -1,0 +1,4 @@
+exception: GameException
+fields:
+  message: String
+  code: GameErrorCode

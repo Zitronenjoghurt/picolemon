@@ -17,9 +17,15 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
 import 'greetings/greeting.dart' as _i5;
-import 'rooms/game_rooms.dart' as _i6;
+import 'rooms/game_error_code.dart' as _i6;
+import 'rooms/game_exception.dart' as _i7;
+import 'rooms/game_player.dart' as _i8;
+import 'rooms/game_room.dart' as _i9;
 export 'greetings/greeting.dart';
-export 'rooms/game_rooms.dart';
+export 'rooms/game_error_code.dart';
+export 'rooms/game_exception.dart';
+export 'rooms/game_player.dart';
+export 'rooms/game_room.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -29,6 +35,90 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
+    _i2.TableDefinition(
+      name: 'game_player',
+      dartName: 'GamePlayer',
+      schema: 'public',
+      module: 'picolemon',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'game_player_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'roomId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'seat',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'joinedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'game_player_fk_0',
+          columns: ['roomId'],
+          referenceTable: 'game_room',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'game_player_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'game_player_room_seat_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'roomId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'seat',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
     _i2.TableDefinition(
       name: 'game_room',
       dartName: 'GameRoom',
@@ -140,14 +230,32 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i5.Greeting) {
       return _i5.Greeting.fromJson(data) as T;
     }
-    if (t == _i6.GameRoom) {
-      return _i6.GameRoom.fromJson(data) as T;
+    if (t == _i6.GameErrorCode) {
+      return _i6.GameErrorCode.fromJson(data) as T;
+    }
+    if (t == _i7.GameException) {
+      return _i7.GameException.fromJson(data) as T;
+    }
+    if (t == _i8.GamePlayer) {
+      return _i8.GamePlayer.fromJson(data) as T;
+    }
+    if (t == _i9.GameRoom) {
+      return _i9.GameRoom.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Greeting?>()) {
       return (data != null ? _i5.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.GameRoom?>()) {
-      return (data != null ? _i6.GameRoom.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.GameErrorCode?>()) {
+      return (data != null ? _i6.GameErrorCode.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i7.GameException?>()) {
+      return (data != null ? _i7.GameException.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i8.GamePlayer?>()) {
+      return (data != null ? _i8.GamePlayer.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i9.GameRoom?>()) {
+      return (data != null ? _i9.GameRoom.fromJson(data) : null) as T;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -164,7 +272,10 @@ class Protocol extends _i1.SerializationManagerServer {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _i5.Greeting => 'Greeting',
-      _i6.GameRoom => 'GameRoom',
+      _i6.GameErrorCode => 'GameErrorCode',
+      _i7.GameException => 'GameException',
+      _i8.GamePlayer => 'GamePlayer',
+      _i9.GameRoom => 'GameRoom',
       _ => null,
     };
   }
@@ -181,7 +292,13 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (data) {
       case _i5.Greeting():
         return 'Greeting';
-      case _i6.GameRoom():
+      case _i6.GameErrorCode():
+        return 'GameErrorCode';
+      case _i7.GameException():
+        return 'GameException';
+      case _i8.GamePlayer():
+        return 'GamePlayer';
+      case _i9.GameRoom():
         return 'GameRoom';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -208,8 +325,17 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Greeting') {
       return deserialize<_i5.Greeting>(data['data']);
     }
+    if (dataClassName == 'GameErrorCode') {
+      return deserialize<_i6.GameErrorCode>(data['data']);
+    }
+    if (dataClassName == 'GameException') {
+      return deserialize<_i7.GameException>(data['data']);
+    }
+    if (dataClassName == 'GamePlayer') {
+      return deserialize<_i8.GamePlayer>(data['data']);
+    }
     if (dataClassName == 'GameRoom') {
-      return deserialize<_i6.GameRoom>(data['data']);
+      return deserialize<_i9.GameRoom>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -247,8 +373,10 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i6.GameRoom:
-        return _i6.GameRoom.t;
+      case _i8.GamePlayer:
+        return _i8.GamePlayer.t;
+      case _i9.GameRoom:
+        return _i9.GameRoom.t;
     }
     return null;
   }

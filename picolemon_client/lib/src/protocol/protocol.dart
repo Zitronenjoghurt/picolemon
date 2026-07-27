@@ -12,13 +12,19 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'greetings/greeting.dart' as _i2;
-import 'rooms/game_rooms.dart' as _i3;
+import 'rooms/game_error_code.dart' as _i3;
+import 'rooms/game_exception.dart' as _i4;
+import 'rooms/game_player.dart' as _i5;
+import 'rooms/game_room.dart' as _i6;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i4;
+    as _i7;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i5;
+    as _i8;
 export 'greetings/greeting.dart';
-export 'rooms/game_rooms.dart';
+export 'rooms/game_error_code.dart';
+export 'rooms/game_exception.dart';
+export 'rooms/game_player.dart';
+export 'rooms/game_room.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -58,20 +64,38 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i2.Greeting) {
       return _i2.Greeting.fromJson(data) as T;
     }
-    if (t == _i3.GameRoom) {
-      return _i3.GameRoom.fromJson(data) as T;
+    if (t == _i3.GameErrorCode) {
+      return _i3.GameErrorCode.fromJson(data) as T;
+    }
+    if (t == _i4.GameException) {
+      return _i4.GameException.fromJson(data) as T;
+    }
+    if (t == _i5.GamePlayer) {
+      return _i5.GamePlayer.fromJson(data) as T;
+    }
+    if (t == _i6.GameRoom) {
+      return _i6.GameRoom.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Greeting?>()) {
       return (data != null ? _i2.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i3.GameRoom?>()) {
-      return (data != null ? _i3.GameRoom.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i3.GameErrorCode?>()) {
+      return (data != null ? _i3.GameErrorCode.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i4.GameException?>()) {
+      return (data != null ? _i4.GameException.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i5.GamePlayer?>()) {
+      return (data != null ? _i5.GamePlayer.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i6.GameRoom?>()) {
+      return (data != null ? _i6.GameRoom.fromJson(data) : null) as T;
     }
     try {
-      return _i4.Protocol().deserialize<T>(data, t);
+      return _i7.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i5.Protocol().deserialize<T>(data, t);
+      return _i8.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -79,7 +103,10 @@ class Protocol extends _i1.SerializationManager {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _i2.Greeting => 'Greeting',
-      _i3.GameRoom => 'GameRoom',
+      _i3.GameErrorCode => 'GameErrorCode',
+      _i4.GameException => 'GameException',
+      _i5.GamePlayer => 'GamePlayer',
+      _i6.GameRoom => 'GameRoom',
       _ => null,
     };
   }
@@ -96,14 +123,20 @@ class Protocol extends _i1.SerializationManager {
     switch (data) {
       case _i2.Greeting():
         return 'Greeting';
-      case _i3.GameRoom():
+      case _i3.GameErrorCode():
+        return 'GameErrorCode';
+      case _i4.GameException():
+        return 'GameException';
+      case _i5.GamePlayer():
+        return 'GamePlayer';
+      case _i6.GameRoom():
         return 'GameRoom';
     }
-    className = _i4.Protocol().getClassNameForObject(data);
+    className = _i7.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i5.Protocol().getClassNameForObject(data);
+    className = _i8.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -119,16 +152,25 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'Greeting') {
       return deserialize<_i2.Greeting>(data['data']);
     }
+    if (dataClassName == 'GameErrorCode') {
+      return deserialize<_i3.GameErrorCode>(data['data']);
+    }
+    if (dataClassName == 'GameException') {
+      return deserialize<_i4.GameException>(data['data']);
+    }
+    if (dataClassName == 'GamePlayer') {
+      return deserialize<_i5.GamePlayer>(data['data']);
+    }
     if (dataClassName == 'GameRoom') {
-      return deserialize<_i3.GameRoom>(data['data']);
+      return deserialize<_i6.GameRoom>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i4.Protocol().deserializeByClassName(data);
+      return _i7.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i5.Protocol().deserializeByClassName(data);
+      return _i8.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -143,10 +185,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i4.Protocol().mapRecordToJson(record);
+      return _i7.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i5.Protocol().mapRecordToJson(record);
+      return _i8.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }

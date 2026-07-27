@@ -1,0 +1,6 @@
+enum: GameErrorCode
+serialized: byName
+values:
+  - roomNotFound
+  - roomFull
+  - roomInactive

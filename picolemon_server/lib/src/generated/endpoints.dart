@@ -14,10 +14,11 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../auth/email_idp_endpoint.dart' as _i2;
 import '../auth/jwt_refresh_endpoint.dart' as _i3;
 import '../greetings/greeting_endpoint.dart' as _i4;
+import '../rooms/game_room_endpoint.dart' as _i5;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i5;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i6;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i7;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -39,6 +40,12 @@ class Endpoints extends _i1.EndpointDispatch {
         ..initialize(
           server,
           'greeting',
+          null,
+        ),
+      'gameRoom': _i5.GameRoomEndpoint()
+        ..initialize(
+          server,
+          'gameRoom',
           null,
         ),
     };
@@ -270,9 +277,72 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i5.Endpoints()
+    connectors['gameRoom'] = _i1.EndpointConnector(
+      name: 'gameRoom',
+      endpoint: endpoints['gameRoom']!,
+      methodConnectors: {
+        'createRoom': _i1.MethodConnector(
+          name: 'createRoom',
+          params: {
+            'gameType': _i1.ParameterDescription(
+              name: 'gameType',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['gameRoom'] as _i5.GameRoomEndpoint).createRoom(
+                    session,
+                    params['gameType'],
+                  ),
+        ),
+        'findByCode': _i1.MethodConnector(
+          name: 'findByCode',
+          params: {
+            'code': _i1.ParameterDescription(
+              name: 'code',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['gameRoom'] as _i5.GameRoomEndpoint).findByCode(
+                    session,
+                    params['code'],
+                  ),
+        ),
+        'joinRoom': _i1.MethodConnector(
+          name: 'joinRoom',
+          params: {
+            'code': _i1.ParameterDescription(
+              name: 'code',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['gameRoom'] as _i5.GameRoomEndpoint).joinRoom(
+                    session,
+                    params['code'],
+                  ),
+        ),
+      },
+    );
+    modules['serverpod_auth_idp'] = _i6.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i6.Endpoints()
+    modules['serverpod_auth_core'] = _i7.Endpoints()
       ..initializeEndpoints(server);
   }
 }

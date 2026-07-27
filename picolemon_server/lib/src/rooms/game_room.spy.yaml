@@ -3,6 +3,7 @@ table: game_room
 fields:
   code: String
   gameType: String
+  # ToDo: GameState
   hostUserId: UuidValue?
   createdAt: DateTime
   isActive: bool, default=true
